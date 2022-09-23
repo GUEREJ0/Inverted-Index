@@ -9,29 +9,24 @@
 #include <iostream>
 #include <set>
 #include <map>
+#include <cctype>
 using namespace std;
 
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
-string cleanToken(string s) {
+string cleanToken(string &s) {
+    string clean = "";
 
-    while(true){
-        if(ispunct(s.front()) == 0){
-            s.erase(s.front());
-        }
-        if(ispunct(s.end()) == 0){
-            s.erase(s.front());
-        }
-
-        if(ispunct(s.front()) && ispunct(s.back()) == 0) {break;}
+    for( int i = 0; i < s.size(); i++){ // Testing for empty string and returning empty string;
+        tolower(s[i]);
+        if(!ispunct(s[i]))  {clean.push_back(tolower(s.at(i)));}
+        // if(isalpha(s[i]) != 0) {return "";}
     }
-    
-    
-    // TODO:  Write this function.
-    
-    
-    return "";  // TODO:  update this.
+    cout << endl;
+    s = clean;
+    return clean;
+
 }
 
 // TODO: Add a function header comment here to explain the

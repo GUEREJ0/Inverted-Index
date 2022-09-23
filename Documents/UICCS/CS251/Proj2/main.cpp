@@ -12,16 +12,19 @@ int main() {
     
     // Use this function to call and test the functions you write inside of
     // search.h.  If you do not call the functions here, nothing will run.
-    string test = "...Hello...";
-    cout << cleanToken(test);
+    string test = "@EGGS!";
+    cout << test << endl;
+    
     cleanToken(test);
+
+    cout << test;
     
 
      
       
        
         
-        
+
     return 0;
 }
 
