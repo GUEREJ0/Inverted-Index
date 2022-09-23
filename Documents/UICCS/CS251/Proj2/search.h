@@ -17,6 +17,12 @@ using namespace std;
 // behavior of the function and how you implemented this behavior
 string cleanToken(string &s) {
     string clean = "";
+    bool flag = false;
+
+    for(int i = 0; i < s.size(); i++){
+        if(isalpha(s.at(i)))  {flag = true;}
+    }
+    if(!flag) {return "";}
 
     for( int i = 0; i < s.size(); i++){ // Testing for empty string and returning empty string;
         tolower(s[i]);
