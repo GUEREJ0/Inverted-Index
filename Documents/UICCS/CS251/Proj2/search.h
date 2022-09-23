@@ -10,6 +10,7 @@
 #include <set>
 #include <map>
 #include <cctype>
+#include <sstream>
 using namespace std;
 
 
@@ -20,16 +21,19 @@ string cleanToken(string &s) {
     bool flag = false;
 
     for(int i = 0; i < s.size(); i++){
-        if(isalpha(s.at(i)))  {flag = true;}
+        if(isalpha(s.at(i)) != 0){flag = true;}
+        if(flag == false){
+            s = "";
+            return s;
+            }
     }
-    if(!flag) {return "";}
+    
 
     for( int i = 0; i < s.size(); i++){ // Testing for empty string and returning empty string;
         tolower(s[i]);
         if(!ispunct(s[i]))  {clean.push_back(tolower(s.at(i)));}
         // if(isalpha(s[i]) != 0) {return "";}
     }
-    cout << endl;
     s = clean;
     return clean;
 
@@ -39,11 +43,21 @@ string cleanToken(string &s) {
 // behavior of the function and how you implemented this behavior
 set<string> gatherTokens(string text) {
     set<string> tokens;
-    
-    
+
+    stringstream ss(text);
+    string substr = "";
+
+    cout << "Entering loop.\n";
+    while(getline(ss, substr, ' ')){
+        // cout << "Before : " << substr << endl;
+        cleanToken(substr);
+        // cout << "After : " << substr << endl;
+        if(substr != ""){tokens.insert(substr);}
+    }
+
+    // cout << "Set size : " << tokens.size() << endl;
     // TODO:  Write this function.
-    
-    
+
     return tokens;  // TODO:  update this.
 }
 

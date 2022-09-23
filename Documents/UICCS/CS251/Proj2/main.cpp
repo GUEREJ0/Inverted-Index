@@ -12,18 +12,10 @@ int main() {
     
     // Use this function to call and test the functions you write inside of
     // search.h.  If you do not call the functions here, nothing will run.
-    string test = "@EGGS!";
-    cout << test << endl;
-    
-    cleanToken(test);
-
-    cout << test;
-    
-
-     
-      
-       
-        
+    string toClean = "EGGS! milk, fish,      @  bread cheese";
+    gatherTokens(toClean);
+    // cout << ispunct('@') << endl;
+    // cout << isalpha('@') << endl;
 
     return 0;
 }
