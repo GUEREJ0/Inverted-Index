@@ -15,7 +15,13 @@ int main() {
     string test = "...Hello...";
     cout << cleanToken(test);
     cleanToken(test);
+    
 
+     
+      
+       
+        
+        
     return 0;
 }
 
