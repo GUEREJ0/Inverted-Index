@@ -7,6 +7,7 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
 #include <set>
 #include <map>
 #include <cctype>
@@ -49,27 +50,40 @@ set<string> gatherTokens(string text) {
 
     cout << "Entering loop.\n";
     while(getline(ss, substr, ' ')){
-        // cout << "Before : " << substr << endl;
         cleanToken(substr);
-        // cout << "After : " << substr << endl;
         if(substr != ""){tokens.insert(substr);}
     }
 
-    // cout << "Set size : " << tokens.size() << endl;
-    // TODO:  Write this function.
-
-    return tokens;  // TODO:  update this.
+    return tokens; 
 }
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
 int buildIndex(string filename, map<string, set<string>>& index) {
+
+    fstream fileInput;
+    fileInput.open(filename);
+    set<string> temp;
+
+    if(!fileInput.is_open()){
+        cout << "Invalid file name. Try again.\n";
+        return 0;
+    }
+
+    int counter = 0;
+    string key;
+    string token;
+    while(getline(fileInput, key)){
+        getline(fileInput, token);
+        index.emplace(key, gatherTokens(token));
+        counter++;
+    }
     
     
     // TODO:  Write this function.
     
     
-    return 0;
+    return counter;
 }
 
 // TODO: Add a function header comment here to explain the
