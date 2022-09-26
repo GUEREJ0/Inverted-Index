@@ -18,7 +18,6 @@ using namespace std;
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
 string cleanToken(string s) {
-    int lastCounter = s.size() - 1;
     bool flag;
 
     for(int i = 0; i < s.size(); i++){ // Checks for empty string or valid string
@@ -30,6 +29,8 @@ string cleanToken(string s) {
     while(ispunct(s[0])){ // Shaving front of string
         s.erase(0, 1);
     }
+
+    int lastCounter = s.size() - 1;
 
     while(ispunct(s[lastCounter])){
         s.erase(lastCounter, lastCounter - 1);
