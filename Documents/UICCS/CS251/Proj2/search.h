@@ -17,27 +17,26 @@ using namespace std;
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
-string cleanToken(string &s) {
-    string clean = "";
-    bool flag = false;
+string cleanToken(string s) {
+    int lastCounter = s.size() - 1;
+    bool flag;
 
-    for(int i = 0; i < s.size(); i++){
-        if(isalpha(s.at(i)) != 0){flag = true;}
-        if(flag == false){
-            s = "";
-            return s;
-            }
+    for(int i = 0; i < s.size(); i++){ // Checks for empty string or valid string
+        if(isalpha(s[i])) {flag = true;}
     }
-    
 
-    for( int i = 0; i < s.size(); i++){ // Testing for empty string and returning empty string;
-        tolower(s[i]);
-        if(!ispunct(s[i]))  {clean.push_back(tolower(s.at(i)));}
-        // if(isalpha(s[i]) != 0) {return "";}
+    if(!flag)   {return "";}
+
+    while(ispunct(s[0])){ // Shaving front of string
+        s.erase(0, 1);
     }
-    s = clean;
-    return clean;
 
+    while(ispunct(s[lastCounter])){
+        s.erase(lastCounter, lastCounter - 1);
+        lastCounter--;
+    }
+
+    return s;
 }
 
 // TODO: Add a function header comment here to explain the
