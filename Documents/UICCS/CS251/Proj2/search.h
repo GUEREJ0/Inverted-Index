@@ -18,13 +18,19 @@ using namespace std;
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
 string cleanToken(string s) {
-    bool flag;
+    bool realString = false;
 
-    for(int i = 0; i < s.size(); i++){ // Checks for empty string or valid string
-        if(isalpha(s[i])) {flag = true;}
+    for(unsigned int i = 0; i < s.size(); i++){ // Checks for empty string or valid string
+        if(isalpha(s[i])){
+            s[i] = tolower(s[i]);
+            realString = true;
+        }
     }
 
-    if(!flag)   {return "";}
+    if(realString == false){
+        s = "";
+        return s;
+    }
 
     while(ispunct(s[0])){ // Shaving front of string
         s.erase(0, 1);
@@ -48,10 +54,9 @@ set<string> gatherTokens(string text) {
     stringstream ss(text);
     string substr = "";
 
-    cout << "Entering loop.\n";
+    // cout << "Entering loop.\n";
     while(getline(ss, substr, ' ')){
-        cleanToken(substr);
-        if(substr != ""){tokens.insert(substr);}
+        if(cleanToken(substr) != ""){tokens.insert(cleanToken(substr));}
     }
 
     return tokens; 
@@ -78,10 +83,6 @@ int buildIndex(string filename, map<string, set<string>>& index) {
         index.emplace(key, gatherTokens(token));
         counter++;
     }
-    
-    
-    // TODO:  Write this function.
-    
     
     return counter;
 }
