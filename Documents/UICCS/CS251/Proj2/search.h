@@ -64,11 +64,11 @@ set<string> gatherTokens(string text) {
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
-int buildIndex(string filename, map<string, set<string>>& index) {
+int buildIndex(string filename, map<string, set<string>>& index){
 
+    map<string, set<string>> invertedIndex;
     fstream fileInput;
     fileInput.open(filename);
-    set<string> temp;
 
     if(!fileInput.is_open()){
         cout << "Invalid file name. Try again.\n";
@@ -83,13 +83,32 @@ int buildIndex(string filename, map<string, set<string>>& index) {
         index.emplace(key, gatherTokens(token));
         counter++;
     }
+    set<string> temp;
+    for(auto map = index.begin(); map != index.end(); map++){
+        temp.emplace(map->first);
+        for(auto test = temp.begin(); test != temp.end(); test++){
+            cout << *test << endl;
+        }
+
+        for(auto set = map->second.begin(); set != map->second.end(); set++){
+            if(invertedIndex.count(*set) <= 0){
+                invertedIndex.emplace(*set, temp);
+            }else{
+                invertedIndex[*set].insert(map->first);
+            }
+            counter++;
+        }
+        temp.clear();
+    }
+    
+    index = invertedIndex;
     
     return counter;
 }
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
-set<string> findQueryMatches(map<string, set<string>>& index, string sentence) {
+set<string> findQueryMatches(const map<string, set<string>>& index, string sentence) {
     set<string> result;
     
     
