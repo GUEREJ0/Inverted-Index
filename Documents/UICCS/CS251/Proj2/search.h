@@ -38,7 +38,7 @@ string cleanToken(string s) {
 
     int lastCounter = s.size() - 1;
 
-    while(ispunct(s[lastCounter])){
+    while(ispunct(s[lastCounter])){ // Shaving the end of string
         s.erase(lastCounter, lastCounter - 1);
         lastCounter--;
     }
@@ -54,7 +54,6 @@ set<string> gatherTokens(string text) {
     stringstream ss(text);
     string substr = "";
 
-    // cout << "Entering loop.\n";
     while(getline(ss, substr, ' ')){
         if(cleanToken(substr) != ""){tokens.insert(cleanToken(substr));}
     }
@@ -86,9 +85,6 @@ int buildIndex(string filename, map<string, set<string>>& index){
     set<string> temp;
     for(auto map = index.begin(); map != index.end(); map++){
         temp.emplace(map->first);
-        for(auto test = temp.begin(); test != temp.end(); test++){
-            cout << *test << endl;
-        }
 
         for(auto set = map->second.begin(); set != map->second.end(); set++){
             if(invertedIndex.count(*set) <= 0){
@@ -100,23 +96,86 @@ int buildIndex(string filename, map<string, set<string>>& index){
         }
         temp.clear();
     }
-    
+
     index = invertedIndex;
     
     return counter;
 }
 
+void setUnion(const map<string, set<string>>& index, set<string>& product, string key){
+
+    for(auto it = index.at(key).begin();it != index.at(key).end(); it++ ){
+        product.emplace(*it);
+    }
+    return;
+}
+
+void setDifference(const map<string, set<string>> &index, set<string> &product, string key){
+    set<string> substract;
+    cout << key << endl;
+    for(auto it = index.at(key).begin(); it != index.at(key).end(); it++){ // Grabbing URLs that contain key
+        substract.emplace(*it);
+    }
+
+    for(auto it = substract.begin(); it != substract.end(); it++){ // Erase results set that have the same 
+        if(product.find(*it) != product.end()){
+            product.erase(*it);
+        }
+    }
+    return;
+}
+
+void setIntersection(const map<string, set<string>> &index, set<string> &product, string key){
+    set<string> intersection;
+    set<string> final;
+    for(auto it = index.at(key).begin(); it != index.at(key).end(); it++){
+        intersection.emplace(*it);
+    }
+
+    for(auto it = intersection.begin(); it != intersection.end(); it++){
+        if(product.find(*it) != product.end()){
+            final.emplace(*it);
+        }
+    }
+    product = final;
+    return;
+}
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
 set<string> findQueryMatches(const map<string, set<string>>& index, string sentence) {
     set<string> result;
+
+    stringstream ss(sentence);
+    string substr; 
+    while(getline(ss, substr, ' ')){
+        cout << substr << endl;
+        if(isalpha(substr[0])){
+            cout << "inserting.\n";
+            setUnion(index, result, cleanToken(substr));
+        }
+        if(substr[0] == '-'){
+            cout << "getting difference.\n";
+            setDifference(index, result, cleanToken(substr));
+        }
+        if(substr[0] == '+'){
+            setIntersection(index, result, cleanToken(substr));
+        }
+    }
+
     
     
     // TODO:  Write this function.
+    cout << "Before printing.\n";
+
+    for(auto set = result.begin(); set != result.end(); set++){
+        cout << *set << endl;
+    }
     
     
     return result;  // TODO:  update this.
 }
+
+
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
