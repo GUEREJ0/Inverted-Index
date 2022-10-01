@@ -36,11 +36,8 @@ string cleanToken(string s) {
         s.erase(0, 1);
     }
 
-    int lastCounter = s.size() - 1;
-
-    while(ispunct(s[lastCounter])){ // Shaving the end of string
-        s.erase(lastCounter, lastCounter - 1);
-        lastCounter--;
+    while(ispunct(s.back())){ // Shaving the end of string
+        s.pop_back();
     }
 
     return s;
@@ -54,8 +51,10 @@ set<string> gatherTokens(string text) {
     stringstream ss(text);
     string substr = "";
 
-    while(getline(ss, substr, ' ')){
-        if(cleanToken(substr) != ""){tokens.insert(cleanToken(substr));}
+    while(getline(ss, substr, ' ')){ // Using the delimter we can parse through the string, and call clean token every time
+        if(cleanToken(substr) != ""){
+            tokens.insert(cleanToken(substr));
+            }
     }
 
     return tokens; 
@@ -69,30 +68,31 @@ int buildIndex(string filename, map<string, set<string>>& index){
     fstream fileInput;
     fileInput.open(filename);
 
-    if(!fileInput.is_open()){
+    if(!fileInput.is_open()){ // Incase wrong filename is opened
         cout << "Invalid file name. Try again.\n";
         return 0;
     }
 
-    int counter = 0;
+    int counter = 0; // Initializing
     string key;
     string token;
-    while(getline(fileInput, key)){
+    while(getline(fileInput, key)){ // This loop creates a regular index and increments counter
         getline(fileInput, token);
         index.emplace(key, gatherTokens(token));
         counter++;
     }
-    set<string> temp;
+
+
+    set<string> temp; // Here we will be inverting the index, we loop through the map and every value in the set at the positon of the map.
     for(auto map = index.begin(); map != index.end(); map++){
         temp.emplace(map->first);
 
         for(auto set = map->second.begin(); set != map->second.end(); set++){
-            if(invertedIndex.count(*set) <= 0){
-                invertedIndex.emplace(*set, temp);
+            if(invertedIndex.count(*set) <= 0){ // We are we checking if the key exists already or not
+                invertedIndex.emplace(*set, temp); // Create key and insert set
             }else{
-                invertedIndex[*set].insert(map->first);
+                invertedIndex[*set].insert(map->first); // Key already exists so, just insert set
             }
-            counter++;
         }
         temp.clear();
     }
@@ -104,7 +104,7 @@ int buildIndex(string filename, map<string, set<string>>& index){
 
 void setUnion(const map<string, set<string>>& index, set<string>& product, string key){
 
-    for(auto it = index.at(key).begin();it != index.at(key).end(); it++ ){
+    for(auto it = index.at(key).begin();it != index.at(key).end(); it++ ){ // Simpling looking through and adding to set
         product.emplace(*it);
     }
     return;
@@ -144,47 +144,69 @@ void setIntersection(const map<string, set<string>> &index, set<string> &product
 // behavior of the function and how you implemented this behavior
 set<string> findQueryMatches(const map<string, set<string>>& index, string sentence) {
     set<string> result;
+    
 
     stringstream ss(sentence);
     string substr; 
     while(getline(ss, substr, ' ')){
-        cout << substr << endl;
-        if(isalpha(substr[0])){
-            cout << "inserting.\n";
+        if(isalpha(substr[0])){ // Long if-else statements to check which set operation the user wants
             setUnion(index, result, cleanToken(substr));
         }
-        if(substr[0] == '-'){
-            cout << "getting difference.\n";
+        else if(substr[0] == '-' && result.size() != 0){
             setDifference(index, result, cleanToken(substr));
         }
-        if(substr[0] == '+'){
+        else if(substr[0] == '+' && result.size() != 0){
             setIntersection(index, result, cleanToken(substr));
+        }else{ 
+            result = index.at(cleanToken(substr));
         }
     }
 
-    
-    
     // TODO:  Write this function.
-    cout << "Before printing.\n";
+    return result; 
+}
 
-    for(auto set = result.begin(); set != result.end(); set++){
-        cout << *set << endl;
+void stopWords(map<string, set<string>> &index){
+    string stop[15] = {"a", "the", "an", "another", "for", "an", "nor", "but", "or", "yet", "so", "in", "under", "towards", "before"}; // Array of stop words
+
+    for(int i = 0; i < 15; i++){ // Looping through stop words
+        if(index.find(stop[i]) != index.end()){ // Checking if the stop words exist
+            index.erase(stop[i]); // Erase if stop words exists
+        }
     }
-    
-    
-    return result;  // TODO:  update this.
 }
 
 
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
-void searchEngine(string filename) {
+void searchEngine(string filename) { 
+    string input = "-1"; // Initializing variables
+    map <string, set<string>> InvertedIndex;
+    set <string> query;
+    int ProcessCount = buildIndex(filename, InvertedIndex);
+
+    cout << "Stand by while building index...\n";
+    cout << "Indexed " << InvertedIndex.size() << " pages containing " << ProcessCount << " unique terms\n" << endl;
 
     
-    // TODO:  Write this function.
-    
-    
+    while(input != ""){
+        cout << "Enter querey sentence (press enter to quit): ";
+        getline(cin, input);
+        query = findQueryMatches(InvertedIndex, input); // Building query
+
+        if(input == ""){ // If user wants to exit
+            break;
+        }
+
+        cout << "Found " << query.size() << " matching pages\n"; // Printing query
+        for(auto s = query.begin(); s != query.end(); s++){
+            cout << *s << endl;
+        }
+        cout << endl;
+    }
+    cout << "Thank you for searching!\n";
+    return;
 }
 
 
