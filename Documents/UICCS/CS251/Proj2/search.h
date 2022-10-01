@@ -1,8 +1,8 @@
-// TODO: remove and replace this file header comment
-// This is a .h file you will edit and turn in.
+// Luis de Santos - Search Engine / Invertex Index
+// CS251 Data Structures, Fall 2022
+// uin : ldesa3
+// Developed on a ARM MacOSX using VSCode
 
-// Remove starter comments and add your own
-// comments on each function and on complex code sections.
 
 #pragma once
 
@@ -15,8 +15,7 @@
 using namespace std;
 
 
-// TODO: Add a function header comment here to explain the
-// behavior of the function and how you implemented this behavior
+// cleanToken will take a string, and clean the front and back of the string by getting rid of junk
 string cleanToken(string s) {
     bool realString = false;
 
@@ -43,8 +42,7 @@ string cleanToken(string s) {
     return s;
 }
 
-// TODO: Add a function header comment here to explain the
-// behavior of the function and how you implemented this behavior
+// using the cleanToken function, and getline's delimter, this function will clean tokens in a long string with spaces.
 set<string> gatherTokens(string text) {
     set<string> tokens;
 
@@ -60,8 +58,7 @@ set<string> gatherTokens(string text) {
     return tokens; 
 }
 
-// TODO: Add a function header comment here to explain the
-// behavior of the function and how you implemented this behavior
+// BuildIndex first reads in the file data, and uses gatherTokens then creates an regular index, but then inverts it, returning the inverted index
 int buildIndex(string filename, map<string, set<string>>& index){
 
     map<string, set<string>> invertedIndex;
@@ -102,6 +99,7 @@ int buildIndex(string filename, map<string, set<string>>& index){
     return counter;
 }
 
+// Unions the set for the query
 void setUnion(const map<string, set<string>>& index, set<string>& product, string key){
 
     for(auto it = index.at(key).begin();it != index.at(key).end(); it++ ){ // Simpling looking through and adding to set
@@ -110,6 +108,7 @@ void setUnion(const map<string, set<string>>& index, set<string>& product, strin
     return;
 }
 
+// Gets set difference for the query
 void setDifference(const map<string, set<string>> &index, set<string> &product, string key){
     set<string> substract;
     cout << key << endl;
@@ -124,7 +123,7 @@ void setDifference(const map<string, set<string>> &index, set<string> &product, 
     }
     return;
 }
-
+// Gets set intersection
 void setIntersection(const map<string, set<string>> &index, set<string> &product, string key){
     set<string> intersection;
     set<string> final;
@@ -140,8 +139,7 @@ void setIntersection(const map<string, set<string>> &index, set<string> &product
     product = final;
     return;
 }
-// TODO: Add a function header comment here to explain the
-// behavior of the function and how you implemented this behavior
+// Using the previous set functions created, we will create a query and return it to the user
 set<string> findQueryMatches(const map<string, set<string>>& index, string sentence) {
     set<string> result;
     
@@ -162,7 +160,6 @@ set<string> findQueryMatches(const map<string, set<string>>& index, string sente
         }
     }
 
-    // TODO:  Write this function.
     return result; 
 }
 
@@ -178,8 +175,7 @@ void stopWords(map<string, set<string>> &index){
 
 
 
-// TODO: Add a function header comment here to explain the
-// behavior of the function and how you implemented this behavior
+// searchEngine brings all the previous functions together for the user
 void searchEngine(string filename) { 
     string input = "-1"; // Initializing variables
     map <string, set<string>> InvertedIndex;
